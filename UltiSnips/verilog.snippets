@@ -220,7 +220,7 @@ ${3://modify sequence here if need be}
 $3.start(${4:full.path.to.sequencer_h});
 endsnippet
 
-snippet u_agent "uvm agent  class"
+snippet uagent "uvm agent  class"
 class ${1:agent name} extends uvm_agent;
     \`uvm_component_utils_begin($1)
     \`uvm_component_utils_end
@@ -240,7 +240,7 @@ class ${1:agent name} extends uvm_agent;
 endclass: $1
 endsnippet
 
-snippet u_sequence "uvm sequence class"
+snippet useq "uvm sequence class"
 class ${1:class_name} extends uvm_sequence #(${2:transaction_name};
     \`uvm_object_utils(my_sequence)
 
@@ -263,7 +263,7 @@ class ${1:class_name} extends uvm_sequence #(${2:transaction_name};
 endclass: $1
 endsnippet
 
-snippet u_monitor "uvm monitor class"
+snippet umonitor "uvm monitor class"
 class ${1:monitor_name} extends uvm_monitor;
     \`uvm_component_utils_begin($1);
     \`uvm_component_utils_end
@@ -289,8 +289,7 @@ class ${1:monitor_name} extends uvm_monitor;
 endclass : $1
 endsnippet
 
-
-snippet seqr "uvm sequencer class"
+snippet useqr "uvm sequencer class"
 class ${1:Name}Sequencer extends uvm_sequencer #(${2:Transaction});
 
     function new (string name, uvm_component parent);
@@ -303,3 +302,35 @@ class ${1:Name}Sequencer extends uvm_sequencer #(${2:Transaction});
 endclass
 endsnippet
 
+snippet usequence "uvm sequence item class"
+class ${1:SequenceItem} extends uvm_sequence_item;
+    //-------------------------------------------------------------------
+    // Data Members
+    //-------------------------------------------------------------------
+	${2}
+
+    //-------------------------------------------------------------------
+    // Constraints
+    //-------------------------------------------------------------------
+    constraint C {
+        $3
+    }
+
+    \`uvm_object_utils_begin($1)
+    	// \`uvm_field_int($2, UVM_ALL_ON|UVM_NOPACK)
+         $4
+    \`uvm_object_utils_end
+
+    //-------------------------------------------------------------------
+    // Methods
+    //-------------------------------------------------------------------
+    extern function new(string name = "$1");
+    extern function void do_copy(uvm_object rhs);
+    extern function bit do_compare(uvm_object rhs, uvm_comparer comparer);
+    extern function string convert2string();
+    extern function void do_print(uvm_printer printer);
+    extern function void do_record(uvm_recorder recorder);
+    extern function void do_pack();
+    extern function void do_unpack();
+endclass : $1
+endsnippet
