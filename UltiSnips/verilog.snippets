@@ -1,0 +1,305 @@
+snippet struct "structure"
+struct {
+    $3
+} ${2:name};
+endsnippet
+
+snippet union "uinon"
+typedef union {
+    $2
+} ${1:name};
+endsnippet
+
+snippet program "program auto"
+program automatic ${1:program_name}();
+   ${1://body}
+endprogram
+endsnippet
+
+snippet initial "initial block"
+initial begin
+    $1
+end
+endsnippet
+
+snippet new "new call"
+    $1 = new("$1", this);
+endsnippet
+
+snippet if "if"
+if (${1:condition}) begin
+    ${VISUAL}
+end
+endsnippet
+
+snippet ife "Conditional if..else (ife)"
+if (${1:condition}) begin
+    ${2:// body...}
+end else begin
+    ${3:// else...}
+end
+endsnippet
+
+snippet elif "else if block"
+else if ($1) begin
+    $2
+end
+endsnippet
+
+snippet else "else block"
+else begin
+    $1
+end
+endsnippet
+
+snippet repeat "repeat N"
+repeat (${1:N}) begin
+    $2
+end
+endsnippet
+
+snippet module "module"
+module ${1:module_name};
+    $2
+endmodule : $1
+endsnippet
+
+snippet interface "interface"
+interface ${1:name}If (input bit ${2:clk}
+                       input bit ${3:rstN}
+                       );
+    $4
+endinterface : ${1}If
+endsnippet
+
+snippet clocking "clocking"
+clocking ${1:module_name} @(${2:posedge} ${3:clk});
+    $4
+endclocking : $1
+endsnippet
+
+snippet task "task"
+task ${1:task_name}($2);
+    $3
+endtask : $1
+endsnippet
+
+snippet for "for"
+for ($1; $2; $3) begin
+    $4
+end
+endsnippet
+
+snippet foreach "for"
+foreach (${1:x}[i]) begin
+    $2
+end
+endsnippet
+
+snippet class "class"
+class ${1:class_name};
+    $2;
+endclass: $1
+endsnippet
+
+snippet function "function"
+function ${1:void} ${2:func_name}();
+    ${3:${VISUAL}}
+endfunction : $2
+endsnippet
+
+snippet while "while"
+while (${1:condition}) begin
+    ${2://statement}
+end
+endsnippet
+
+snippet fork "fork join"
+fork
+    begin
+        $1
+    end
+
+    begin
+    end
+join
+endsnippet
+
+snippet forka "fork join_any"
+fork
+    begin
+        $1
+    end
+
+    begin
+    end
+join_any
+endsnippet
+
+snippet forkn "fork join_none"
+fork
+    begin
+        $1
+    end
+
+    begin
+    end
+join_none
+endsnippet
+
+
+
+
+
+######################################
+#    UVM
+######################################
+
+snippet build_phase "uvm build phase"
+function void build_phase(uvm_phase phase);
+      super.build_phase(phase);
+      $1
+endfunction : build_phase
+endsnippet
+
+snippet package "uvm package"
+package $1
+    import uvm_pgk::*;
+    $2
+endpackage : $1
+endsnippet
+
+snippet uvm_class "uvm class"
+class ${1:class_name} extends uvm_env;
+    \`uvm_component_utils_begin($1)
+    \`uvm_component_utils_end
+
+    function new(string name, uvm_component parent = null);
+        super.new(name, parent);
+    endfunction : new
+
+    function void build_phase(uvm_phase phase);
+        super.build_phase(phase);
+    endfunction : build_phase
+
+    task run_phase(uvm_phase phase);
+
+    endtask : run_phase
+
+    $2
+endclass : $1
+endsnippet
+
+snippet utest "uvm test class"
+class $1 extends uvm_test;
+
+    \`uvm_component_utils($1)
+
+    ${2://declare env here} env;
+
+    function new(string name, uvm_component parent);
+        super.new(name, parent);
+    endfunction: new
+
+    function void build_phase(uvm_phase phase);
+        super.build_phase(phase);
+        env = $2::type_id::create("env", this);
+    endfunction: build_phase
+
+    task run_phase(uvm_phase phase);
+        ${4:call create here}
+    endtask: run_phase
+
+endclass: $1
+endsnippet
+
+snippet create "uvm test create"
+${1type} ${2var};
+$2 = $1::type_id::craete("$2");
+${3://modify sequence here if need be}
+$3.start(${4:full.path.to.sequencer_h});
+endsnippet
+
+snippet u_agent "uvm agent  class"
+class ${1:agent name} extends uvm_agent;
+    \`uvm_component_utils_begin($1)
+    \`uvm_component_utils_end
+
+    function new(string name, uvm_component_utils parent );
+        super.new(name, parent);
+    endfunction : new
+
+    function void build_phase(uvm_phase phase); //create child componenets
+        super.build_phase(phase);
+        // instanciate lower level components here
+        // my_sequencer::type_id::create("my_sequence_h", this);
+    endfunction : build_phase
+
+    function void connect_phase(uvm_phase phase); // connect child components
+    endfunction : connect_phase
+endclass: $1
+endsnippet
+
+snippet u_sequence "uvm sequence class"
+class ${1:class_name} extends uvm_sequence #(${2:transaction_name};
+    \`uvm_object_utils(my_sequence)
+
+    function new(String name="");
+        super.name(name);
+    endfunction: new
+
+    task body; // the behavior of the sequence
+        // 1. Creation
+        req = $2::type_id::create("req");
+
+        // 2. Ready
+        start_item (req);
+
+        // 3. Set
+
+        // 4. Go
+        finish_item (req);
+    endtask: body
+endclass: $1
+endsnippet
+
+snippet u_monitor "uvm monitor class"
+class ${1:monitor_name} extends uvm_monitor;
+    \`uvm_component_utils_begin($1);
+    \`uvm_component_utils_end
+
+    uvm_analysis_port #{2:tx_class} $2;
+
+    function new
+    endfunction
+
+    function void build_phase(uvm_phase phase);
+        super.build_phase(phase);
+        $2 = new("$2",this);
+    endfunction
+
+    task run_phase(uvm_phase phase);
+        forever begin
+            $3 tx;
+
+            //stuff goes here
+            $2.write(tx); // broadcast
+        end
+    endtask
+endclass : $1
+endsnippet
+
+
+snippet seqr "uvm sequencer class"
+class ${1:Name}Sequencer extends uvm_sequencer #(${2:Transaction});
+
+    function new (string name, uvm_component parent);
+        super.new(name, parent);
+        \`uvm_update_sequence_lib_and_item(instruction)
+    endfunction
+
+    \`uvm_sequencer_utils(instruction_sequencer)
+
+endclass
+endsnippet
+
