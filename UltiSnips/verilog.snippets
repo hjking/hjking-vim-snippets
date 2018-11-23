@@ -275,7 +275,7 @@ class ${1:monitor_name} extends uvm_monitor;
 
     function void build_phase(uvm_phase phase);
         super.build_phase(phase);
-        $2 = new("$2",this);
+        $2 = new("$2", this);
     endfunction
 
     task run_phase(uvm_phase phase);
@@ -307,7 +307,7 @@ class ${1:SequenceItem} extends uvm_sequence_item;
     //-------------------------------------------------------------------
     // Data Members
     //-------------------------------------------------------------------
-	${2}
+    ${2}
 
     //-------------------------------------------------------------------
     // Constraints
@@ -317,8 +317,8 @@ class ${1:SequenceItem} extends uvm_sequence_item;
     }
 
     \`uvm_object_utils_begin($1)
-    	// \`uvm_field_int($2, UVM_ALL_ON|UVM_NOPACK)
-         $4
+        // \`uvm_field_int($2, UVM_ALL_ON|UVM_NOPACK)
+        $4
     \`uvm_object_utils_end
 
     //-------------------------------------------------------------------
