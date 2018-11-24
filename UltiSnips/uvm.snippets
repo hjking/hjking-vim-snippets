@@ -86,7 +86,7 @@ class ${1:Name}Agent extends uvm_agent;
     function void connect_phase(uvm_phase phase); // connect child components
     endfunction : connect_phase
 
-endclass: ${1}Agent
+endclass: $1Agent
 endsnippet
 
 snippet useq "uvm sequence class"
@@ -109,7 +109,7 @@ class ${1:Name}Sequence extends uvm_sequence #(${2:transaction_name});
     // 4. Go
     finish_item (req);
     endtask: body
-endclass: ${1}Sequence
+endclass: $1Sequence
 endsnippet
 
 snippet umonitor "uvm monitor class"
@@ -135,7 +135,7 @@ class ${1:Name}Monitor extends uvm_monitor;
             $2.write(tx); // broadcast
         end
     endtask
-endclass : ${1}Monitor
+endclass : $1Monitor
 endsnippet
 
 snippet useqr "uvm sequencer class"
@@ -148,7 +148,7 @@ class ${1:Name}Sequencer extends uvm_sequencer #(${2:Transaction});
 
     \`uvm_sequencer_utils(instruction_sequencer)
 
-endclass : ${1}Sequencer
+endclass : $1Sequencer
 endsnippet
 
 snippet utr "uvm sequence item class"
