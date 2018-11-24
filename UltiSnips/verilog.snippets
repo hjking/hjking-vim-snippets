@@ -1,14 +1,33 @@
 snippet struct "structure"
-struct {
-    $3
-} ${2:name};
+typedef struct {
+    $2
+} ${1:name}S;
+endsnippet
+
+snippet structp "structure packed"
+typedef struct packed {
+    $2
+} ${1:name}S;
 endsnippet
 
 snippet union "uinon"
 typedef union {
     $2
-} ${1:name};
+} ${1:name}U;
 endsnippet
+
+snippet unionp "uinon packed"
+typedef union packed {
+    $2
+} ${1:name}U;
+endsnippet
+
+snippet enum "enum"
+typedef $1 enum {
+    $3
+} ${2:name}E;
+endsnippet
+
 
 snippet program "program auto"
 program automatic ${1:program_name}();

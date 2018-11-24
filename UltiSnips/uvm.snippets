@@ -17,10 +17,12 @@ package $1
 endpackage : $1
 endsnippet
 
-snippet uvm_class "uvm class"
-class ${1:class_name} extends uvm_env;
-    \`uvm_component_utils_begin($1)
+snippet uenv "uvm env class"
+class ${1:Name}Env extends uvm_env;
+    \`uvm_component_utils_begin($1Env)
     \`uvm_component_utils_end
+
+    $2
 
     function new(string name, uvm_component parent = null);
         super.new(name, parent);
@@ -28,14 +30,16 @@ class ${1:class_name} extends uvm_env;
 
     function void build_phase(uvm_phase phase);
         super.build_phase(phase);
+        $3
     endfunction : build_phase
 
-    task run_phase(uvm_phase phase);
+    function void connect_phase(uvm_phase phase);
+        super.connect_phase(phase);
+        $4
+    endfunction : connect_phase
 
-    endtask : run_phase
-
-    $2
-endclass : $1
+    $5
+endclass : $1Env
 endsnippet
 
 snippet utest "uvm test class"
@@ -43,7 +47,7 @@ class $1 extends uvm_test;
 
     \`uvm_component_utils($1)
 
-    ${2://declare env here} env;
+    ${2:EnvName} env;
 
     function new(string name, uvm_component parent);
         super.new(name, parent);
@@ -55,14 +59,16 @@ class $1 extends uvm_test;
     endfunction: build_phase
 
     task run_phase(uvm_phase phase);
-        ${4:call create here}
+        ${3:call create here}
     endtask: run_phase
+
+    $4
 
 endclass: $1
 endsnippet
 
 snippet create "uvm test create"
-${1type} ${2var};
+${1:type} ${2:var};
 $2 = $1::type_id::craete("$2");
 ${3://modify sequence here if need be}
 $3.start(${4:full.path.to.sequencer_h});
@@ -70,8 +76,10 @@ endsnippet
 
 snippet uagent "uvm agent  class"
 class ${1:Name}Agent extends uvm_agent;
-    \`uvm_component_utils_begin($1)
+    \`uvm_component_utils_begin($1Agent)
     \`uvm_component_utils_end
+
+    $2;
 
     function new(string name, uvm_component_utils parent );
         super.new(name, parent);
@@ -91,9 +99,9 @@ endsnippet
 
 snippet useq "uvm sequence class"
 class ${1:Name}Sequence extends uvm_sequence #(${2:transaction_name});
-    \`uvm_object_utils(my_sequence)
+    \`uvm_object_utils($1Sequence)
 
-    function new(String name="");
+    function new(string name="");
         super.name(name);
     endfunction: new
 
@@ -114,25 +122,25 @@ endsnippet
 
 snippet umonitor "uvm monitor class"
 class ${1:Name}Monitor extends uvm_monitor;
-    \`uvm_component_utils_begin($1);
+    \`uvm_component_utils_begin($1Monitor);
     \`uvm_component_utils_end
 
-    uvm_analysis_port #{2:tx_class} $2;
+    uvm_analysis_port #(${2:tx_class}) $3;
 
     function new
     endfunction
 
     function void build_phase(uvm_phase phase);
         super.build_phase(phase);
-        $2 = new("$2", this);
+        $3 = new("$3", this);
     endfunction
 
     task run_phase(uvm_phase phase);
         forever begin
-            $3 tx;
+            $2 tr;
 
             //stuff goes here
-            $2.write(tx); // broadcast
+            $3.write(tr); // broadcast
         end
     endtask
 endclass : $1Monitor
@@ -145,6 +153,8 @@ class ${1:Name}Sequencer extends uvm_sequencer #(${2:Transaction});
         super.new(name, parent);
         \`uvm_update_sequence_lib_and_item(instruction)
     endfunction
+
+    $2
 
     \`uvm_sequencer_utils(instruction_sequencer)
 
